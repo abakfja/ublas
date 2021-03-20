@@ -73,3 +73,15 @@ jobs:
          cd $BOOST_ROOT
          cd libs/numeric/ublas
          $BOOST_ROOT/b2 -j 4 test/tensor toolset=${{matrix.config.name}} cxxstd=${{matrix.config.cxxstd}} cxxflags="-g -fsanitize=address -fno-omit-frame-pointer" linkflags="-fsanitize=address"
+      
+      - name: Test Matrix Examples
+        run: |
+         cd $BOOST_ROOT
+         cd libs/numeric/ublas
+         $BOOST_ROOT/b2 -j 4 examples/matrix toolset=${{matrix.config.name}} cxxstd=${{matrix.config.cxxstd}} cxxflags="-g -fsanitize=address -fno-omit-frame-pointer" linkflags="-fsanitize=address"
+        
+      - name: Test Matrix
+        run: |
+         cd $BOOST_ROOT
+         cd libs/numeric/ublas
+         $BOOST_ROOT/b2 -j 4 test/matrix toolset=${{matrix.config.name}} cxxstd=${{matrix.config.cxxstd}} cxxflags="-g -fsanitize=address -fno-omit-frame-pointer" linkflags="-fsanitize=address"

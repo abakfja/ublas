@@ -26,7 +26,7 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 ## Build Status
 
 
-#### Tensor Build & Test
+#### Tensor and Matrix Build & Test
 
 |      Operating System       |      Compiler       |  [`master`](https://github.com/boostorg/ublas/tree/master)   | [`develop`](https://github.com/boostorg/ublas/tree/develop)  |
 | :-------------------------: | :-----------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
@@ -35,7 +35,7 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 |     Windows 10 (x86_64)     | msvc-{14.16, 14.26} | [![Windows MSVC](https://github.com/boostorg/ublas/workflows/Windows%20MSVC/badge.svg?branch=master)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Windows+MSVC%22+branch%3Amaster) | [![Windows MSVC](https://github.com/boostorg/ublas/workflows/Windows%20MSVC/badge.svg?branch=develop)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Windows+MSVC%22+branch%3Adevelop) |
 |   MacOS Catalina (x86_64)   |      clang-11       | [![Apple Clang](https://github.com/boostorg/ublas/workflows/Apple%20Clang/badge.svg?branch=master)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Apple+Clang%22+branch%3Amaster) | [![Apple Clang](https://github.com/boostorg/ublas/workflows/Apple%20Clang/badge.svg?branch=develop)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Apple+Clang%22+branch%3Adevelop) |
 
-#### Tensor Additional Checks
+#### Tensor and Matrix Additional Checks
 
 |    Checks     |  [`master`](https://github.com/boostorg/ublas/tree/master)   | [`develop`](https://github.com/boostorg/ublas/tree/develop)  |
 | :-----------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
@@ -46,7 +46,7 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 | Clang-Format  | [![Code Format](https://github.com/boostorg/ublas/workflows/Code%20Format/badge.svg?branch=master)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Code+Format%22+branch%3Amaster) | [![Code Format](https://github.com/boostorg/ublas/workflows/Code%20Format/badge.svg?branch=develop)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Code+Format%22+branch%3Adevelop) |
 |  Clang-Tidy   | [![Clang tidy checks](https://github.com/boostorg/ublas/workflows/Clang%20tidy%20checks/badge.svg?branch=master)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Clang+tidy+checks%22+branch%3Amaster) | [![Clang tidy checks](https://github.com/boostorg/ublas/workflows/Clang%20tidy%20checks/badge.svg?branch=develop)](https://github.com/boostorg/ublas/actions?query=workflow%3A%22Clang+tidy+checks%22+branch%3Adevelop) |
 
-#### Tensor Build Information
+#### Tensor and Matrix Build Information
 
 |         OS         |    Toolchain    |                  Compiler Flags                   |
 | :----------------: | :-------------: | :-----------------------------------------------: |

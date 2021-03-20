@@ -71,3 +71,15 @@ jobs:
         cd $BOOST_ROOT
         cd libs/numeric/ublas
         $BOOST_ROOT/b2 -j 4 test/tensor toolset=clang cxxstd=${{matrix.cxxstd}}
+    
+    - name: Test Matrix Examples
+      run: |
+        cd $BOOST_ROOT
+        cd libs/numeric/ublas
+        $BOOST_ROOT/b2 -j 4 examples/matrix toolset=clang cxxstd=${{matrix.cxxstd}}
+        
+    - name: Test Matrix
+      run: |
+        cd $BOOST_ROOT
+        cd libs/numeric/ublas
+        $BOOST_ROOT/b2 -j 4 test/matrix toolset=clang cxxstd=${{matrix.cxxstd}}

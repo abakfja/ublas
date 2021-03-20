@@ -32,9 +32,9 @@ jobs:
 
       - uses: actions/setup-python@v2
 
-      - name: "Run clang-tidy check"
+      - name: "Run clang-tidy check for both tensor and matrix"
         run: |
-          clang-tidy-10 examples/tensor/*.cpp -- -Iinclude -std=c++17 > reports.txt
+          clang-tidy-10 examples/tensor/*.cpp examples/matrix/*.cpp -- -Iinclude -std=c++17 > reports.txt
 
       - name: "Post review comments"
         if: always()
