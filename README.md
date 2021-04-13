@@ -1,5 +1,82 @@
 Boost Linear and Multilinear Algebra Library 
 =====
+# Google summer of Code project: uBlas
+
+- Fork [uBlas](https://github.com/boostorg/ublas) and use the `develop` branch for your implementation
+  - :white_check_mark:
+- Create a `matrix` folder in
+  - `include/boost/numeric/ublas` for your implementation
+    - :white_check_mark:
+  - `test` for the unit-tests
+    - :white_check_mark: usage of `Boost.test` has been done to write the unit tests.
+  - `examples` for the QR decomposition example
+    - :white_check_mark:
+- Provide a new `matrix` and `vector` C++17 implementation:
+- :white_check_mark: A `matrix<Engine>` implementation and a `vector<Engine, Layout>`. The `Engine` is the data owning object whose size can be declared both at compile time and run-time. 
+- Provide following functionality:
+  - `A = zeros(3,2);`
+    - :white_check_mark: A similar function `dmatrix::zeros(r, c)` is provided
+  - `C = A+B`, `C = 2*A`, etc. for element-wise matrix operations
+    - :white_check_mark: Element wise  negation, addition between matrices and vectors have been provided. Also multiplication and division with scalars has also been implemented using **expression templates**.
+  - `C = A*B` for matrix multiplication 
+    - :white_check_mark: ​Same expression can be used for matrix multiplication, Matrix multiplication could not be implemented using expression templates as then the expression `A = A * B` would not be evaluated correctly.
+  - `C = A'` for matrix transposition
+    - :white_check_mark: A helper function `transpose()` has been provided, 
+  - `A==B` for element-wise comparison
+    - :white_check_mark: ​Comparison operators for both matrix and vector have been implemented.
+  - `c = A[3]` for accessing elements with a single zero-based index
+    - :white_check_mark: Index operator has been provided currently only row-major layout is supported. 
+  - `c = A(3,2)` or `A(3,5) = c` for accessing elements with a two zero-based indices
+    - :white_check_mark: The following operators have been provided by overloading the `()` operator​ with the row paramter being followed by the column parameter.
+  - `C = A(1:2,1:3)` to generate a `matrix` instance that contains data of `A` referenced by the ranges `1:2` and `1:3`
+    - :white_check_mark: Such an operation leads to creation of a separate matrix instance. Initially plan was to have a read/write non-owning view to be created(similar to **mdspan**), which I am working on. ​
+- Use the C++ standard library for your matrix implementation wherever possible (e.g. use `std::tuple` and `std::tie`)
+  - :white_check_mark: Extensive use of modern c++ STL functions and types has been done while implementing the classes​
+- Implement auxiliary types such as `range`/`span` and helper functions such as `zeros`, `size`, `norm` to offer maximum readability
+  - :white_check_mark: `span` has been implemented
+  - :white_check_mark: `zeros` has been implemented
+  - :white_check_mark: `size` has been implemented as a member function
+  - :white_check_mark: `norm​` has been implemented
+- Modify the `README.md` for Github Actions usage
+
+  - :white_check_mark: ​Both the Github Actions and the `README.md` have been updated to include the new `matrix` folders and types that have been created.
+- Implement a C++ `qr` function QR-decomposing a matrix with a **minimal number of code lines** based on the following Matlab code
+
+```matlab
+function [Q,R] = qr(A)
+  [m, n] = size(A);
+  Q = zeros(m,n);
+  R = zeros(n,n);
+  for k = 1:n
+    R(1:k-1,k) = Q(:,1:k-1)' * A(:,k);
+    v = A(:,k) - Q(:,1:k-1) * R(1:k-1,k);
+    R(k,k) = norm(v);
+    Q(:,k) = v / R(k,k);
+  end
+end
+```
+
+  - :white_check_mark: ​Here is the function using the above constructs(One could go for further reduction in lines using std::copy but that would take away from the readability of code): 
+
+```c++
+auto qr(dmatrix A) {
+    auto [m, n] = A.size();
+    auto Q = dmatrix::zeros(m, n);
+    auto R = dmatrix::zeros(n, n);
+    for (int k = 1; k < n; k++) {
+        auto temp = transpose(Q(range{0, m}, range{1, k - 1})) * A.col(k);
+        auto v = A.col(k) - Q(range{0, m},range{1, k - 1}) * temp
+    	  R(k, k) = norm(v);
+        for (int i = 0; i < Q.rows(); i++) {
+        	Q(i, k) = v(i, 0) / R(k, k);
+        }
+    }
+}
+```
+
+* Implement a C++ `main` function showing with`A == Q*R` that your `qr` decomposition works correctly
+  * :white_check_mark: ​The file `example/matrix/qr_decomposition.cpp` contains the aforementioned function
+
 
 [![Language](https://img.shields.io/badge/C%2B%2B-11-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![License](https://img.shields.io/badge/license-BSL-blue.svg)](https://opensource.org/licenses/BSL-1.0)
