@@ -3,43 +3,73 @@ Boost Linear and Multilinear Algebra Library
 # Google summer of Code project: uBlas
 
 - Fork [uBlas](https://github.com/boostorg/ublas) and use the `develop` branch for your implementation
+
   - :white_check_mark:
+
 - Create a `matrix` folder in
+
   - `include/boost/numeric/ublas` for your implementation
-    - :white_check_mark:
   - `test` for the unit-tests
-    - :white_check_mark: usage of `Boost.test` has been done to write the unit tests.
   - `examples` for the QR decomposition example
     - :white_check_mark:
+
 - Provide a new `matrix` and `vector` C++17 implementation:
+
 - :white_check_mark: A `matrix<Engine>` implementation and a `vector<Engine, Layout>`. The `Engine` is the data owning object whose size can be declared both at compile time and run-time. 
+
 - Provide following functionality:
+
   - `A = zeros(3,2);`
+
     - :white_check_mark: A similar function `dmatrix::zeros(r, c)` is provided
+
   - `C = A+B`, `C = 2*A`, etc. for element-wise matrix operations
-    - :white_check_mark: Element wise  negation, addition between matrices and vectors have been provided. Also multiplication and division with scalars has also been implemented using **expression templates**.
+
+    - :white_check_mark: Element wise  negation, addition between matrices and vectors have been provided. Also multiplication and division with scalars has also been implemented
+
   - `C = A*B` for matrix multiplication 
-    - :white_check_mark: ​Same expression can be used for matrix multiplication, Matrix multiplication could not be implemented using expression templates as then the expression `A = A * B` would not be evaluated correctly.
+
+    - :white_check_mark: ​Same expression can be used for matrix multiplication. However matrix multiplication has not been implemented using expression templates due to the fact that expressions like :
+
+      `x = A * x`
+
+      Don't work using expression templates as value of cell depends on other cells of the matrix as well, However with modern c++'s copy elision the performance hit might not be too hard.
+
   - `C = A'` for matrix transposition
-    - :white_check_mark: A helper function `transpose()` has been provided, 
+
+    - :white_check_mark: A helper function `transpose()` has bee provided 
+
   - `A==B` for element-wise comparison
-    - :white_check_mark: ​Comparison operators for both matrix and vector have been implemented.
+
+    - :white_check_mark: ​Comparison operators for both matrix and vector have been provided
+
   - `c = A[3]` for accessing elements with a single zero-based index
+
     - :white_check_mark: Index operator has been provided currently only row-major layout is supported. 
+
   - `c = A(3,2)` or `A(3,5) = c` for accessing elements with a two zero-based indices
-    - :white_check_mark: The following operators have been provided by overloading the `()` operator​ with the row paramter being followed by the column parameter.
+
+    - :white_check_mark: The following operators have been provided by overloading the `()` operator​
+
   - `C = A(1:2,1:3)` to generate a `matrix` instance that contains data of `A` referenced by the ranges `1:2` and `1:3`
-    - :white_check_mark: Such an operation leads to creation of a separate matrix instance. Initially plan was to have a read/write non-owning view to be created(similar to **mdspan**), which I am working on. ​
+
+    - :white_check_mark: Such an operation leads to creation read/write non owning view.​
+
 - Use the C++ standard library for your matrix implementation wherever possible (e.g. use `std::tuple` and `std::tie`)
+
   - :white_check_mark: Extensive use of modern c++ STL functions and types has been done while implementing the classes​
+
 - Implement auxiliary types such as `range`/`span` and helper functions such as `zeros`, `size`, `norm` to offer maximum readability
+
   - :white_check_mark: `span` has been implemented
   - :white_check_mark: `zeros` has been implemented
   - :white_check_mark: `size` has been implemented as a member function
   - :white_check_mark: `norm​` has been implemented
+
 - Modify the `README.md` for Github Actions usage
 
   - :white_check_mark: ​Both the Github Actions and the `README.md` have been updated to include the new `matrix` folders and types that have been created.
+
 - Implement a C++ `qr` function QR-decomposing a matrix with a **minimal number of code lines** based on the following Matlab code
 
 ```matlab
@@ -59,18 +89,21 @@ end
   - :white_check_mark: ​Here is the function using the above constructs(One could go for further reduction in lines using std::copy but that would take away from the readability of code): 
 
 ```c++
-auto qr(dmatrix A) {
-    auto [m, n] = A.size();
-    auto Q = dmatrix::zeros(m, n);
-    auto R = dmatrix::zeros(n, n);
-    for (int k = 1; k < n; k++) {
-        auto temp = transpose(Q(range{0, m}, range{1, k - 1})) * A.col(k);
-        auto v = A.col(k) - Q(range{0, m},range{1, k - 1}) * temp
-    	  R(k, k) = norm(v);
-        for (int i = 0; i < Q.rows(); i++) {
-        	Q(i, k) = v(i, 0) / R(k, k);
+template<typename T>
+auto qr(dmatrix<T> A) {
+    auto[m, n] = A.size();
+    auto Q = dmatrix<T>(m, n);
+    auto R = dmatrix<T>(m, n);
+    for (std::size_t k = 0; k < n; k++) {
+        auto v = A({0, m}, k);
+        if (k > 0) {
+            R({0, k - 1}, k) = transpose(Q({0, m}, {0, k - 1})) * A({0, m}, k);
+            v = A({0, m}, k) - Q({0, m}, {0, k - 1}) * R({0, k - 1}, k);
         }
+        R(k, k) = norm<float>(v);
+        Q({0, m}, k) = v / R(k, k);
     }
+    return std::make_pair(Q, R);
 }
 ```
 
