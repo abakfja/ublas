@@ -1,0 +1,21 @@
+#
+# Created by abakfja on 3/12/21.
+#
+import ../../../../config/checks/config : requires ;
+ 
+# Project settings
+project boost-ublas-matrix-example
+    : requirements
+       <define>BOOST_UBLAS_NO_EXCEPTIONS
+       <toolset>vacpp:<define>"BOOST_UBLAS_NO_ELEMENT_PROXIES"
+       <toolset>gcc:<cxxflags>"-Wall -pedantic -Wextra -Wno-unknown-pragmas"
+       <toolset>clang:<cxxflags>"-Wall -pedantic -Wextra -Wno-unknown-pragmas"
+       <toolset>msvc:<cxxflags>"/W4" # == all
+       [ requires cxx17_if_constexpr ]
+    ;
+
+exe matrix_generics                  : matrix_generics.cpp ;
+exe matrix_operators                 : matrix_operators.cpp ;
+exe qr_decomposition                 : qr_decomposition.cpp ;
+exe vector_generics                  : vector_generics.cpp ;
+exe vector_operators                 : vector_operators.cpp ;

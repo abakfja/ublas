@@ -92,19 +92,20 @@ end
 template<typename T>
 auto qr(dmatrix<T> A) {
     auto[m, n] = A.size();
-    auto Q = dmatrix<T>(m, n);
-    auto R = dmatrix<T>(m, n);
+    auto Q = zeros<T>(m, n);
+    auto R = zeros<T>(n, n);
     for (std::size_t k = 0; k < n; k++) {
-        auto v = A({0, m}, k);
+        dmatrix<T> v = A({0, m}, k);
         if (k > 0) {
-            R({0, k - 1}, k) = transpose(Q({0, m}, {0, k - 1})) * A({0, m}, k);
-            v = A({0, m}, k) - Q({0, m}, {0, k - 1}) * R({0, k - 1}, k);
+            R({0, k}, k) = transpose(Q({0, m}, {0, k})) * A({0, m}, k);
+            v = A({0, m}, k) - Q({0, m}, {0, k}) * R({0, k}, k);
         }
         R(k, k) = norm<float>(v);
         Q({0, m}, k) = v / R(k, k);
     }
     return std::make_pair(Q, R);
 }
+
 ```
 
 * Implement a C++ `main` function showing with`A == Q*R` that your `qr` decomposition works correctly
